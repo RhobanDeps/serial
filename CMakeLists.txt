@@ -1,14 +1,5 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.16.3)
 project(serial)
-
-# Find catkin macros and libraries
-find_package(catkin)
-
-# What is published by the 'serial package'
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES serial
-)
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra")
 
@@ -39,6 +30,9 @@ endif()
 
 ## Add serial library
 add_library(serial SHARED ${serial_SRCS})
+target_include_directories(serial PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
 if(APPLE)
 	target_link_libraries(${PROJECT_NAME} ${FOUNDATION_LIBRARY} ${IOKIT_LIBRARY})
 elseif(UNIX)
@@ -52,5 +46,3 @@ add_executable(serial_example examples/serial_example.cc)
 add_dependencies(serial_example ${PROJECT_NAME})
 target_link_libraries(serial_example serial)
 
-## Include headers
-include_directories(include)
